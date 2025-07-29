@@ -6,6 +6,7 @@ from database import cursor, conn
 from login import open_login_window
 
 def open_register_window(parent):
+    from login import open_login_window
     register_app = ctk.CTkToplevel(parent)
     register_app.title("Create Account")
     register_app.geometry("900x650")
