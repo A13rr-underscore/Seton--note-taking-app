@@ -258,7 +258,7 @@ def open_note_app(parent):
         ctk.CTkButton(title_frame, text="Delete", command=delete_note, width=80).pack(side="right", padx=5)
         content_textbox = ctk.CTkTextbox(editor, width=760, height=380)
         content_textbox.pack(padx=20, pady=20)
- def open_journal():
+     def open_journal():
         journal = ctk.CTkToplevel(note_app)
         journal.title("Journal Entry")
         journal.geometry("850x550")
@@ -306,3 +306,70 @@ def open_note_app(parent):
         journal_text = ctk.CTkTextbox(journal, width=780, height=350)
         journal_text.insert("1.0", "Write your journal here...")
         journal_text.pack(padx=20, pady=20)
+    def open_lecture_note():
+        lecture = ctk.CTkToplevel(note_app)
+        lecture.title("Lecture Note")
+        lecture.geometry("850x600")
+        lecture.transient(note_app)
+        lecture.lift()
+        lecture.focus_force()
+
+        def save_lecture():
+            title = title_entry.get()
+            subject = subject_entry.get()
+            topic = topic_entry.get()
+            date = date_entry.get()
+            content = notes_text.get("1.0", "end-1c")
+            summary = summary_text.get("1.0", "end-1c")
+            if title.strip() and content.strip():
+                folder = 3
+                cursor.execute(
+                    "INSERT INTO Seton (title, content, category, date, subject, topic, summary, folder, username) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    (title, content, "Lecture", date, subject, topic, summary, folder, current_user)
+                )
+                conn.commit()
+                lecture.destroy()
+
+        def delete_lecture():
+            lecture.destroy()
+
+        def go_back():
+            lecture.destroy()
+
+        top_frame = ctk.CTkFrame(lecture)
+        top_frame.pack(fill="x", pady=10, padx=10)
+        ctk.CTkButton(top_frame, text="< Back", width=60, command=go_back).pack(side="left")
+        ctk.CTkLabel(top_frame, text="Title:", font=("Arial", 16)).pack(side="left", padx=10)
+        title_entry = ctk.CTkEntry(top_frame, width=300)
+        title_entry.pack(side="left", padx=10)
+        ctk.CTkButton(top_frame, text="Save", width=80, command=save_lecture).pack(side="right", padx=5)
+        ctk.CTkButton(top_frame, text="Delete", width=80, command=delete_lecture).pack(side="right", padx=5)
+        info_frame = ctk.CTkFrame(lecture)
+        info_frame.pack(fill="x", padx=20, pady=10)
+        ctk.CTkLabel(info_frame, text="Subject:", font=("Arial", 14)).grid(row=0, column=0, sticky="w", pady=5)
+        subject_entry = ctk.CTkEntry(info_frame, width=250)
+        subject_entry.grid(row=0, column=1, padx=10, pady=5)
+        ctk.CTkLabel(info_frame, text="Topic:", font=("Arial", 14)).grid(row=0, column=2, sticky="w", pady=5)
+        topic_entry = ctk.CTkEntry(info_frame, width=250)
+        topic_entry.grid(row=0, column=3, padx=10, pady=5)
+        ctk.CTkLabel(info_frame, text="Date:", font=("Arial", 14)).grid(row=0, column=4, sticky="w", pady=5)
+        date_entry = ctk.CTkEntry(info_frame, width=120)
+        date_entry.insert(0, datetime.today().strftime('%d/%m/%Y'))
+        date_entry.grid(row=0, column=5, padx=10, pady=5)
+        notes_text = ctk.CTkTextbox(lecture, width=780, height=250)
+        notes_text.insert("1.0", "Write your lecture notes here...")
+        notes_text.pack(padx=20, pady=10)
+        summary_text = ctk.CTkTextbox(lecture, width=780, height=100)
+        summary_text.insert("1.0", "Write summary / key points here...")
+        summary_text.pack(padx=20, pady=10)
+
+    sidebar = ctk.CTkFrame(master=note_app, width=200)
+    sidebar.pack(side="left", fill="y")
+    logo_image = ctk.CTkImage(
+        light_image=Image.open("logo1.jpg"),
+        dark_image=Image.open("logo1.jpg"),
+        size=(120, 120)
+    )
+    ctk.CTkLabel(sidebar, image=logo_image, text="").pack(pady=20)
+    ctk.CTkButton(sidebar, text="Notes List", command=open_notes_list).pack(pady=10)
+    ctk.CTkButton(sidebar, text="Account", command=lambda: open_account_window(note_app)).pack(pady=10)
