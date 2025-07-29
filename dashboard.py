@@ -258,3 +258,51 @@ def open_note_app(parent):
         ctk.CTkButton(title_frame, text="Delete", command=delete_note, width=80).pack(side="right", padx=5)
         content_textbox = ctk.CTkTextbox(editor, width=760, height=380)
         content_textbox.pack(padx=20, pady=20)
+ def open_journal():
+        journal = ctk.CTkToplevel(note_app)
+        journal.title("Journal Entry")
+        journal.geometry("850x550")
+        journal.transient(note_app)
+        journal.lift()
+        journal.focus_force()
+
+        def save_journal():
+            mood = mood_entry.get()
+            title = title_entry.get()
+            content = journal_text.get("1.0", "end-1c")
+            date = date_entry.get()
+            if title.strip() and content.strip():
+                folder = 2
+                cursor.execute(
+                    "INSERT INTO Seton (title, content, category, mood, date, folder, username) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (title, content, "Journal", mood, date, folder, current_user)
+                )
+                conn.commit()
+                journal.destroy()
+
+        def delete_journal():
+            journal.destroy()
+
+        def go_back():
+            journal.destroy()
+
+        top_frame = ctk.CTkFrame(journal)
+        top_frame.pack(fill="x", pady=10, padx=10)
+        ctk.CTkButton(top_frame, text="< Back", width=60, command=go_back).pack(side="left")
+        ctk.CTkLabel(top_frame, text="Journal Entry -", font=("Arial", 16)).pack(side="left", padx=10)
+        date_entry = ctk.CTkEntry(top_frame, width=150)
+        date_entry.insert(0, datetime.today().strftime('%d/%m/%Y'))
+        date_entry.pack(side="left")
+        ctk.CTkButton(top_frame, text="Save", command=save_journal, width=80).pack(side="right", padx=10)
+        ctk.CTkButton(top_frame, text="Delete", command=delete_journal, width=80).pack(side="right")
+        form_frame = ctk.CTkFrame(journal)
+        form_frame.pack(fill="x", padx=20, pady=10)
+        ctk.CTkLabel(form_frame, text="Mood:", font=("Arial", 14)).grid(row=0, column=0, sticky="w", pady=5)
+        mood_entry = ctk.CTkEntry(form_frame, width=300)
+        mood_entry.grid(row=0, column=1, padx=10, pady=5)
+        ctk.CTkLabel(form_frame, text="Title:", font=("Arial", 14)).grid(row=1, column=0, sticky="w", pady=5)
+        title_entry = ctk.CTkEntry(form_frame, width=300)
+        title_entry.grid(row=1, column=1, padx=10, pady=5)
+        journal_text = ctk.CTkTextbox(journal, width=780, height=350)
+        journal_text.insert("1.0", "Write your journal here...")
+        journal_text.pack(padx=20, pady=20)
