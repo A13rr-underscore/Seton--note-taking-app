@@ -6,14 +6,47 @@ import sqlite3
 from datetime import datetime
 from account import open_account_window
 
-# ---------------- Global Appearance ----------------
-ctk.set_appearance_mode("dark")
+#ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("dark-blue")
 
 # ---------------- Global Variable for Logged-In User ----------------
 current_user = None
 
-#                NOTE APP (opens after login)
+# ---------------- Database ----------------
+conn = sqlite3.connect("Seton.db")
+cursor = conn.cursor()
+
+# Create Users table for user authentication
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS Users (
+        username TEXT PRIMARY KEY,
+        password TEXT NOT NULL,
+        question1 TEXT,
+        answer1 TEXT,
+        question2 TEXT,
+        answer2 TEXT
+    )
+''')
+
+# Create Seton table with username field
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS Seton (
+        id INTEGER PRIMARY KEY,
+        title TEXT,
+        content TEXT,
+        category TEXT,
+        mood TEXT,
+        date TEXT,
+        subject TEXT,
+        topic TEXT,
+        summary TEXT,
+        folder INTEGER,
+        username TEXT,
+        FOREIGN KEY (username) REFERENCES Users (username)
+    )
+''')
+conn.commit()
+
 def open_note_app(parent):
     ctk.set_appearance_mode("Dark")
     ctk.set_default_color_theme("blue")
@@ -224,7 +257,7 @@ def open_note_app(parent):
         ctk.CTkButton(title_frame, text="Delete", command=delete_note, width=80).pack(side="right", padx=5)
         content_textbox = ctk.CTkTextbox(editor, width=760, height=380)
         content_textbox.pack(padx=20, pady=20)
-     def open_journal():
+    def open_journal():
         journal = ctk.CTkToplevel(note_app)
         journal.title("Journal Entry")
         journal.geometry("850x550")

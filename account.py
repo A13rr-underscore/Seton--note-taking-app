@@ -1,4 +1,12 @@
- def open_account_window(parent):
+import customtkinter as ctk
+from PIL import Image
+from tkinter import messagebox
+import tkinter as tk
+import sqlite3
+from datetime import datetime
+from database import cursor, conn
+from login import open_login_window
+def open_account_window(parent):
     account_app = ctk.CTkToplevel(parent)
     account_app.title("User Information")
     account_app.geometry("400x300")
