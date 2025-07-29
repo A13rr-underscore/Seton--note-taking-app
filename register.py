@@ -3,7 +3,6 @@ from tkinter import messagebox
 from PIL import Image
 
 from database import cursor, conn
-from login import open_login_window
 
 def open_register_window(parent):
     from login import open_login_window
