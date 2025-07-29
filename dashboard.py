@@ -58,43 +58,7 @@ def open_note_app(parent):
     note_app.resizable(True, True)
     note_app.focus_force()
 
-    def open_blank_note():
-        editor = ctk.CTkToplevel(note_app)
-        editor.title("New Blank Note")
-        editor.geometry("800x500")
-        editor.transient(note_app)
-        editor.lift()
-        editor.focus_force()
-
-        def save_note():
-            title = title_entry.get()
-            content = content_textbox.get("1.0", "end-1c")
-            if title.strip() and content.strip():
-                folder = 1
-                cursor.execute(
-                    "INSERT INTO Seton (title, content, category, folder, username) VALUES (?, ?, ?, ?, ?)",
-                    (title, content, "Blank Note", folder, current_user)
-                )
-                conn.commit()
-                editor.destroy()
-
-        def delete_note():
-            editor.destroy()
-
-        def go_back():
-            editor.destroy()
-
-        ctk.CTkButton(editor, text="< Back", command=go_back, width=80).pack(anchor="nw", padx=10, pady=10)
-        title_frame = ctk.CTkFrame(editor)
-        title_frame.pack(fill="x", padx=20)
-        ctk.CTkLabel(title_frame, text="Title:", font=("Arial", 16)).pack(side="left")
-        title_entry = ctk.CTkEntry(title_frame, width=400, placeholder_text="Enter title...")
-        title_entry.pack(side="left", padx=10)
-        ctk.CTkButton(title_frame, text="Save", command=save_note, width=80).pack(side="right", padx=5)
-        ctk.CTkButton(title_frame, text="Delete", command=delete_note, width=80).pack(side="right", padx=5)
-        content_textbox = ctk.CTkTextbox(editor, width=760, height=380)
-        content_textbox.pack(padx=20, pady=20)
-
+    
     def open_notes_list():
         window = ctk.CTkToplevel(note_app)
         window.title("Notes List")
@@ -258,3 +222,39 @@ def open_note_app(parent):
 
         current_folder = 1
         refresh_notes()
+    def open_blank_note():
+        editor = ctk.CTkToplevel(note_app)
+        editor.title("New Blank Note")
+        editor.geometry("800x500")
+        editor.transient(note_app)
+        editor.lift()
+        editor.focus_force()
+
+        def save_note():
+            title = title_entry.get()
+            content = content_textbox.get("1.0", "end-1c")
+            if title.strip() and content.strip():
+                folder = 1
+                cursor.execute(
+                    "INSERT INTO Seton (title, content, category, folder, username) VALUES (?, ?, ?, ?, ?)",
+                    (title, content, "Blank Note", folder, current_user)
+                )
+                conn.commit()
+                editor.destroy()
+
+        def delete_note():
+            editor.destroy()
+
+        def go_back():
+            editor.destroy()
+
+        ctk.CTkButton(editor, text="< Back", command=go_back, width=80).pack(anchor="nw", padx=10, pady=10)
+        title_frame = ctk.CTkFrame(editor)
+        title_frame.pack(fill="x", padx=20)
+        ctk.CTkLabel(title_frame, text="Title:", font=("Arial", 16)).pack(side="left")
+        title_entry = ctk.CTkEntry(title_frame, width=400, placeholder_text="Enter title...")
+        title_entry.pack(side="left", padx=10)
+        ctk.CTkButton(title_frame, text="Save", command=save_note, width=80).pack(side="right", padx=5)
+        ctk.CTkButton(title_frame, text="Delete", command=delete_note, width=80).pack(side="right", padx=5)
+        content_textbox = ctk.CTkTextbox(editor, width=760, height=380)
+        content_textbox.pack(padx=20, pady=20)
