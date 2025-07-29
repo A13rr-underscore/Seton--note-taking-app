@@ -3,9 +3,6 @@ from tkinter import messagebox
 from PIL import Image
 
 from database import cursor
-from recover import open_recover_window
-from register import open_register_window
-from dashboard import open_note_app
 
 def open_login_window(parent):
     login_app = ctk.CTkToplevel(parent)
@@ -29,6 +26,7 @@ def open_login_window(parent):
     password_entry.pack(pady=10)
 
     def do_login():
+        from dashboard import open_note_app
         global current_user
         username = username_entry.get()
         password = password_entry.get()
@@ -49,6 +47,7 @@ def open_login_window(parent):
     ctk.CTkButton(login_frame, text="Login", command=do_login, width=200).pack(pady=20)
 
     def go_to_recover(_event):
+        from recover import open_recover_window
         login_app.destroy()
         open_recover_window(parent)
 
@@ -57,6 +56,7 @@ def open_login_window(parent):
     forgot_label.bind("<Button-1>", go_to_recover)
 
     def go_to_register(_event):
+        from register import open_register_window
         login_app.destroy()
         open_register_window(parent)
 

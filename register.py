@@ -3,7 +3,6 @@ from tkinter import messagebox
 from PIL import Image
 
 from database import cursor, conn
-from login import open_login_window
 
 def open_register_window(parent):
     register_app = ctk.CTkToplevel(parent)
@@ -49,6 +48,7 @@ def open_register_window(parent):
     q2_entry.pack(pady=6)
 
     def register():
+        from login import open_login_window
         username = username_entry.get()
         password = password_entry.get()
         confirm = confirm_entry.get()

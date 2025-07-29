@@ -3,7 +3,6 @@ from tkinter import messagebox
 from PIL import Image
 
 from database import cursor, conn
-from login import open_login_window
 
 def open_recover_window(parent):
     recover_app = ctk.CTkToplevel(parent)
@@ -39,6 +38,7 @@ def open_recover_window(parent):
     confirm_pass.pack(pady=(5, 30))
 
     def recover():
+        from login import open_login_window
         username = username_entry.get()
         ans1 = ans1_entry.get()
         ans2 = ans2_entry.get()
