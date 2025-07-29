@@ -5,11 +5,30 @@ import tkinter as tk
 import sqlite3
 from datetime import datetime
 
-# Database connection
+# ---------------- Global Appearance ----------------
+ctk.set_appearance_mode("dark")
+ctk.set_default_color_theme("dark-blue")
+
+# ---------------- Global Variable for Logged-In User ----------------
+current_user = None
+
+# ---------------- Database ----------------
 conn = sqlite3.connect("Seton.db")
 cursor = conn.cursor()
 
-# Create the Seton table if it doesn't exist
+# Create Users table for user authentication
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS Users (
+        username TEXT PRIMARY KEY,
+        password TEXT NOT NULL,
+        question1 TEXT,
+        answer1 TEXT,
+        question2 TEXT,
+        answer2 TEXT
+    )
+''')
+
+# Create Seton table with username field
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS Seton (
         id INTEGER PRIMARY KEY,
@@ -21,75 +40,57 @@ cursor.execute('''
         subject TEXT,
         topic TEXT,
         summary TEXT,
-        folder INTEGER
+        folder INTEGER,
+        username TEXT,
+        FOREIGN KEY (username) REFERENCES Users (username)
     )
 ''')
 conn.commit()
 
+#                NOTE APP (opens after login)
 def open_note_app(parent):
-    """
-    Open the Note App as a Toplevel window after successful login.
-    This is the main dashboard of the application.
-    """
-    # Set theme for the dashboard
-    ctk.set_appearance_mode("Light")
+    ctk.set_appearance_mode("Dark")
     ctk.set_default_color_theme("blue")
 
-    # Create the main dashboard window
     note_app = ctk.CTkToplevel(parent)
     note_app.title("Note App")
     note_app.geometry("1000x600")
     note_app.resizable(True, True)
     note_app.focus_force()
 
-    # ------------- Sidebar -------------
-    sidebar = ctk.CTkFrame(master=note_app, width=200)
-    sidebar.pack(side="left", fill="y")
-    # Placeholder for logo (replace with actual image or widget)
-    ctk.CTkLabel(sidebar, text="Logo", font=("Arial", 20)).pack(pady=20)
-    # Button to open the list of notes
-    ctk.CTkButton(sidebar, text="Notes List", command=open_notes_list).pack(pady=10)
-    # Button to open account settings (currently linked to open_blank_note, may need adjustment)
-    ctk.CTkButton(sidebar, text="Account", command=open_blank_note).pack(pady=10)
-    # Button to log out
-    ctk.CTkButton(sidebar, text="Log Out", command=logout).pack(pady=10)
+    def open_blank_note():
+        editor = ctk.CTkToplevel(note_app)
+        editor.title("New Blank Note")
+        editor.geometry("800x500")
+        editor.transient(note_app)
+        editor.lift()
+        editor.focus_force()
 
-    # ------------- Header -------------
-    header = ctk.CTkFrame(master=note_app, height=50)
-    header.pack(fill="x")
-    # Greeting label (replace "user" with actual username if available)
-    ctk.CTkLabel(header, text="Hello, user!", font=("Arial", 18)).pack(side="left", padx=20)
-    # Search bar for notes
-    search_bar = ctk.CTkEntry(header, placeholder_text="Search notes...", width=200)
-    search_bar.pack(side="right", padx=20)
+        def save_note():
+            title = title_entry.get()
+            content = content_textbox.get("1.0", "end-1c")
+            if title.strip() and content.strip():
+                folder = 1
+                cursor.execute(
+                    "INSERT INTO Seton (title, content, category, folder, username) VALUES (?, ?, ?, ?, ?)",
+                    (title, content, "Blank Note", folder, current_user)
+                )
+                conn.commit()
+                editor.destroy()
 
-    # ------------- Main Area -------------
-    main_area = ctk.CTkFrame(master=note_app)
-    main_area.pack(fill="both", expand=True)
-    # Buttons for creating different types of notes
-    cards = [
-        ("Blank Note", open_blank_note),
-        ("Journal", open_journal),
-        ("Lecture Note", open_lecture_note),
-    ]
-    for idx, (label, func) in enumerate(cards):
-        ctk.CTkButton(master=main_area, text=label, width=150, height=200, command=func)\
-            .grid(row=0, column=idx, padx=20, pady=40)
+        def delete_note():
+            editor.destroy()
 
-    # ------------- Window Close Protocol -------------
-    def on_close():
-        # Reset theme for welcome window
-        ctk.set_appearance_mode("dark")
-        ctk.set_default_color_theme("dark-blue")
-        parent.deiconify()  # Show the welcome window again
-        note_app.destroy()
+        def go_back():
+            editor.destroy()
 
-    note_app.protocol("WM_DELETE_WINDOW", on_close)
-
-# ------------- Logout Function -------------
-def logout():
-    if messagebox.askyesno("Logout", "Are you sure you want to logout?"):
-        def open_and_destroy():
-            open_welcome_window()  # Reopen the welcome window
-            note_app.destroy()     # Close the dashboard
-        note_app.after(200, open_and_destroy)
+        ctk.CTkButton(editor, text="< Back", command=go_back, width=80).pack(anchor="nw", padx=10, pady=10)
+        title_frame = ctk.CTkFrame(editor)
+        title_frame.pack(fill="x", padx=20)
+        ctk.CTkLabel(title_frame, text="Title:", font=("Arial", 16)).pack(side="left")
+        title_entry = ctk.CTkEntry(title_frame, width=400, placeholder_text="Enter title...")
+        title_entry.pack(side="left", padx=10)
+        ctk.CTkButton(title_frame, text="Save", command=save_note, width=80).pack(side="right", padx=5)
+        ctk.CTkButton(title_frame, text="Delete", command=delete_note, width=80).pack(side="right", padx=5)
+        content_textbox = ctk.CTkTextbox(editor, width=760, height=380)
+        content_textbox.pack(padx=20, pady=20)
