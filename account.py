@@ -5,8 +5,7 @@ import tkinter as tk
 import sqlite3
 
 from database import cursor, conn
-from login import open_login_window
-from register import register
+from register import open_account_window
 def open_account_window(parent):
     account_app = ctk.CTkToplevel(parent)
     account_app.title("User Information")
