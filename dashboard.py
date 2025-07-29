@@ -13,41 +13,6 @@ ctk.set_default_color_theme("dark-blue")
 # ---------------- Global Variable for Logged-In User ----------------
 current_user = None
 
-# ---------------- Database ----------------
-conn = sqlite3.connect("Seton.db")
-cursor = conn.cursor()
-
-# Create Users table for user authentication
-cursor.execute('''
-    CREATE TABLE IF NOT EXISTS Users (
-        username TEXT PRIMARY KEY,
-        password TEXT NOT NULL,
-        question1 TEXT,
-        answer1 TEXT,
-        question2 TEXT,
-        answer2 TEXT
-    )
-''')
-
-# Create Seton table with username field
-cursor.execute('''
-    CREATE TABLE IF NOT EXISTS Seton (
-        id INTEGER PRIMARY KEY,
-        title TEXT,
-        content TEXT,
-        category TEXT,
-        mood TEXT,
-        date TEXT,
-        subject TEXT,
-        topic TEXT,
-        summary TEXT,
-        folder INTEGER,
-        username TEXT,
-        FOREIGN KEY (username) REFERENCES Users (username)
-    )
-''')
-conn.commit()
-
 #                NOTE APP (opens after login)
 def open_note_app(parent):
     ctk.set_appearance_mode("Dark")

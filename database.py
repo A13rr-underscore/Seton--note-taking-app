@@ -14,4 +14,22 @@ cursor.execute('''
         answer2 TEXT
     )
 ''')
+
+# Seton table
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS Seton (
+        id INTEGER PRIMARY KEY,
+        title TEXT,
+        content TEXT,
+        category TEXT,
+        mood TEXT,
+        date TEXT,
+        subject TEXT,
+        topic TEXT,
+        summary TEXT,
+        folder INTEGER,
+        username TEXT,
+        FOREIGN KEY (username) REFERENCES Users (username)
+    )
+''')
 conn.commit()

@@ -5,6 +5,7 @@ from PIL import Image
 from database import cursor
 from recover import open_recover_window
 from register import open_register_window
+from dashboard import open_note_app
 
 def open_login_window(parent):
     login_app = ctk.CTkToplevel(parent)
