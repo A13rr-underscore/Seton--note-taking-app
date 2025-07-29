@@ -1,8 +1,7 @@
 import customtkinter as ctk
 from PIL import Image
-from tkinter import messagebox
-import tkinter as tk
-import sqlite3
+
+from login import open_login_window
 
 def open_welcome_window(prev_window=None):
     root = ctk.CTk()
