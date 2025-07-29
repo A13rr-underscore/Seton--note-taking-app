@@ -1,8 +1,5 @@
 import customtkinter as ctk
-from PIL import Image
 from tkinter import messagebox
-import tkinter as tk
-import sqlite3
 
 from database import cursor, conn
 
