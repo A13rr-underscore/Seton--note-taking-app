@@ -4,6 +4,7 @@ from tkinter import messagebox
 import tkinter as tk
 import sqlite3
 from datetime import datetime
+from account import open_account_window
 
 # ---------------- Global Appearance ----------------
 ctk.set_appearance_mode("dark")
