@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from tkinter import messagebox
+from PIL import Image
 
 from database import cursor
 from recover import open_recover_window
