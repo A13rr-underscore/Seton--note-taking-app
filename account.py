@@ -3,9 +3,10 @@ from PIL import Image
 from tkinter import messagebox
 import tkinter as tk
 import sqlite3
-from datetime import datetime
+
 from database import cursor, conn
 from login import open_login_window
+from register import register
 def open_account_window(parent):
     account_app = ctk.CTkToplevel(parent)
     account_app.title("User Information")
