@@ -5,6 +5,7 @@ from PIL import Image
 from database import cursor, conn
 
 def open_register_window(parent):
+    from login import open_login_window
     register_app = ctk.CTkToplevel(parent)
     register_app.title("Create Account")
     register_app.geometry("900x650")
@@ -48,7 +49,6 @@ def open_register_window(parent):
     q2_entry.pack(pady=6)
 
     def register():
-        from login import open_login_window
         username = username_entry.get()
         password = password_entry.get()
         confirm = confirm_entry.get()
