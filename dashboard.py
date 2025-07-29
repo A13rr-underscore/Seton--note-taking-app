@@ -339,3 +339,11 @@ def open_note_app(parent):
     ctk.CTkLabel(sidebar, image=logo_image, text="").pack(pady=20)
     ctk.CTkButton(sidebar, text="Notes List", command=open_notes_list).pack(pady=10)
     ctk.CTkButton(sidebar, text="Account", command=lambda: open_account_window(note_app)).pack(pady=10)
+    def logout():
+        global current_user
+        if messagebox.askyesno("Logout", "Are you sure you want to logout?"):
+            current_user = None
+            open_login_window(parent)
+            note_app.destroy()
+
+    ctk.CTkButton(sidebar, text="Log Out", command=logout).pack(pady=10)
