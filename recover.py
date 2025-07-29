@@ -1,7 +1,8 @@
 import customtkinter as ctk
 from tkinter import messagebox
 
-from database import cursor
+from database import cursor, conn
+from login import open_login_window
 
 def open_recover_window(parent):
     recover_app = ctk.CTkToplevel(parent)

@@ -1,7 +1,9 @@
 import customtkinter as ctk
 from PIL import Image
 
+from database import conn
 from login import open_login_window
+from register import open_register_window
 
 def open_welcome_window(prev_window=None):
     root = ctk.CTk()
