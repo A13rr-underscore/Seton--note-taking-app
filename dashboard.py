@@ -208,8 +208,9 @@ def open_note_app(parent):
                 conn.commit()
                 editor.destroy()
 
-        def delete_note():
-            editor.destroy()
+       def delete_note():
+            if tk.messagebox.askyesno("Delete", "Are you sure you want to delete this note?"):
+                editor.destroy()
 
         def go_back():
             editor.destroy()
