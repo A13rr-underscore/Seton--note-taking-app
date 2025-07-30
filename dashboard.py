@@ -212,8 +212,9 @@ def open_note_app(parent):
             if tk.messagebox.askyesno("Delete", "Are you sure you want to delete this note?"):
                 editor.destroy()
 
-        def go_back():
-            editor.destroy()
+       def go_back():
+            if tk.messagebox.askyesno("Go Back", "Are you sure you want to go back? Unsaved changes will be lost."):
+                editor.destroy()
 
         ctk.CTkButton(editor, text="< Back", command=go_back, width=80).pack(anchor="nw", padx=10, pady=10)
         title_frame = ctk.CTkFrame(editor)
@@ -248,10 +249,12 @@ def open_note_app(parent):
                 journal.destroy()
 
         def delete_journal():
-            journal.destroy()
+            if tk.messagebox.askyesno("Delete", "Are you sure you want to delete this journal entry?"):
+                journal.destroy()
 
-        def go_back():
-            journal.destroy()
+       def go_back():
+            if tk.messagebox.askyesno("Go Back", "Are you sure you want to go back? Unsaved changes will be lost."):
+                journal.destroy()
 
         top_frame = ctk.CTkFrame(journal)
         top_frame.pack(fill="x", pady=10, padx=10)
@@ -298,10 +301,12 @@ def open_note_app(parent):
                 lecture.destroy()
 
         def delete_lecture():
-            lecture.destroy()
+            if tk.messagebox.askyesno("Delete", "Are you sure you want to delete this lecture note?"):
+                lecture.destroy()
 
         def go_back():
-            lecture.destroy()
+            if tk.messagebox.askyesno("Go Back", "Are you sure you want to go back? Unsaved changes will be lost."):
+                lecture.destroy()
 
         top_frame = ctk.CTkFrame(lecture)
         top_frame.pack(fill="x", pady=10, padx=10)
